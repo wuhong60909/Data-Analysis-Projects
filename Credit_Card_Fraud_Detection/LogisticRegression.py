@@ -265,7 +265,7 @@ Precision, Recall, F1_scores = cross_val(clf = classifier, X = X_train, y = y_tr
 
 # %%
 def selectThresholdByCV(F1, Precision, Recall, Thresholds):    
-    n_splits = F1_scores.shape[0]    
+    n_splits = F1.shape[0]    
     f1_thres = F1.mean(axis = 0)
     precision_thres = Precision.mean(axis = 0)
     recall_thres = Recall.mean(axis = 0)
@@ -282,7 +282,7 @@ def selectThresholdByCV(F1, Precision, Recall, Thresholds):
     # Figures vs thresholds
     # F1 scores vs thresholds
     plt.figure(figsize = (12, 5))
-    plt.xlim((np.min(thresholds) - 0.05, np.max(thresholds) + 0.05))
+    plt.xlim((np.min(Thresholds) - 0.05, np.max(Thresholds) + 0.05))
     plt.ylim((0, 1.1))
     plt.xlabel('Thresholds')
     plt.ylabel('F1 Scores')
@@ -303,7 +303,7 @@ def selectThresholdByCV(F1, Precision, Recall, Thresholds):
     
     # Precision vs thresholds
     plt.figure(figsize = (12, 5))
-    plt.xlim((np.min(thresholds) - 0.05, np.max(thresholds) + 0.05))
+    plt.xlim((np.min(Thresholds) - 0.05, np.max(Thresholds) + 0.05))
     plt.ylim((0, 1.1))
     plt.xlabel('Thresholds')
     plt.ylabel('Precision')
@@ -324,7 +324,7 @@ def selectThresholdByCV(F1, Precision, Recall, Thresholds):
     
     # Recall vs thresholds
     plt.figure(figsize = (12, 5))
-    plt.xlim((np.min(thresholds) - 0.05, np.max(thresholds) + 0.05))
+    plt.xlim((np.min(Thresholds) - 0.05, np.max(Thresholds) + 0.05))
     plt.ylim((0, 1.1))
     plt.xlabel('Thresholds')
     plt.ylabel('Recall')
