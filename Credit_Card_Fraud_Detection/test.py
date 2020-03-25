@@ -44,3 +44,39 @@ a.ROC_plot()
 a.PRF_plot()
 a.PR_plot()
 # %%
+
+# %%
+from selectThreshold import selectThresholdByCV
+classifier = LogisticRegression(solver = 'liblinear', random_state = 0)
+n_splits = 5
+thresholds = np.linspace(0.001, 0.99, 10)
+# %%
+best_f1, best_precision, best_recall, best_threshold = selectThresholdByCV(clf = classifier, X = X_train, y = y_train, 
+                                                                           thresholds = thresholds, n_splits = n_splits, plot_result = True)
+# %%
+print('Best threshold = %.3f' % (best_threshold))
+print('F1 score CV = %.3f' % (best_f1))
+print('Precision CV = %.3f' % (best_precision))
+print('Recall CV = %.3f' % (best_recall))
+
+# %%
+# Applying Grid Search to find the best model and the best parameters
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import StratifiedKFold
+
+classifier = LogisticRegression(solver = 'liblinear', random_state = 0)
+parameter = [{'penalty': ['l1'], 'C': np.arange(0.01, 1, 0.5)}, 
+             {'penalty': ['l2'], 'C': np.arange(0.01, 1, 0.5)}]
+
+skf = StratifiedKFold(n_splits = 10, random_state = 0)
+grid_search = GridSearchCV(estimator = classifier, 
+                           param_grid = parameter,
+                           scoring = 'average_precision',
+                           cv = skf.split(X_train, y_train),
+                           n_jobs = -1)
+grid_search = grid_search.fit(X_train, y_train)
+best_score = grid_search.best_score_
+best_parameters = grid_search.best_params_
+results = grid_search.cv_results_
+best_parameters
+# %%
