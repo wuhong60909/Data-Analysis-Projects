@@ -36,7 +36,8 @@ class curves:
         plt.legend()
         plt.show()
 
-    def ROC_plot(self):     
+    def ROC_plot(self):
+        # ROC curve
         plt.figure(figsize = (12, 5))
         plt.plot(self.fpr, self.tpr, linewidth = 3, label = 'AUC = %0.3f' % (self.roc_auc))
         plt.plot([0, 1], [0, 1], linewidth = 3)
@@ -50,15 +51,10 @@ class curves:
 
     def PRF_plot(self):
         # Precision, Recall, F1 score curve
-        max_f1 = self.f1_scores.max()
-        best_threshold = self.threshold[self.f1_scores[1: ] == max_f1]
-
         plt.figure(figsize = (12, 5))
         plt.plot(self.threshold, self.precision[1: ], label = "Precision", linewidth = 3)
         plt.plot(self.threshold, self.recall[1: ], label = "Recall", linewidth = 3)
         plt.plot(self.threshold, self.f1_scores[1: ], label = "F1 score", linewidth = 3, color = 'green')
-        plt.axvline(best_threshold, color = 'black', ls = '--', label = 'Threshold = %0.3f' % (best_threshold))
-        plt.axhline(max_f1, color = 'black', ls = '-', label = 'Max F1 score = %0.3f' % (max_f1))
         plt.ylim(0, 1.1)
         plt.xlabel('Threshold')
         plt.ylabel('Precision/ Recall/ F1 score')
