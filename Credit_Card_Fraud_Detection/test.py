@@ -30,34 +30,57 @@ sc = StandardScaler()
 X_train[:, -1:] = sc.fit_transform(X_train[:, -1:])
 X_test[:, -1:] = sc.transform(X_test[:, -1:])
 
+# %%
 # Fitting the classifier to the Training set: Logistic Regression
 from sklearn.linear_model import LogisticRegression
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from catboost import CatBoostClassifier
+
 classifier = LogisticRegression(solver = 'liblinear', random_state = 0)
-classifier.fit(X_train, y_train)
+# classifier = LinearDiscriminantAnalysis()
+# classifier = QuadraticDiscriminantAnalysis()
+# classifier = SVC(kernel = 'linear', random_state = 0)
+# classifier = GaussianNB()
+# classifier = CatBoostClassifier(iterations = 100, learning_rate = 1, verbose = 0)
 
 # %%
-from curves import curves
-a = curves(clf = classifier, X = X_test, y = y_test)
+classifier.fit(X_train, y_train)
+y_score = classifier.predict_proba(X_test)[:, 1]
+# y_score = classifier.predict_log_proba(X_test)[:, 1]
+# y_score = classifier.decision_function(X_test)
+
 # %%
+# Plot scores, ROC, PRF, PR curves
+from curves import curves
+a = curves(y_true = y_test, y_score = y_score)
 a.scores_plot()
 a.ROC_plot()
 a.PRF_plot()
 a.PR_plot()
-# %%
 
 # %%
+# Choose thresholds by StratifiedKfold cross validation.
 from selectThreshold import selectThresholdByCV
-classifier = LogisticRegression(solver = 'liblinear', random_state = 0)
 n_splits = 5
 thresholds = np.linspace(0.001, 0.99, 10)
+classifier = LogisticRegression(solver = 'liblinear', random_state = 0)
 # %%
-best_f1, best_precision, best_recall, best_threshold = selectThresholdByCV(clf = classifier, X = X_train, y = y_train, 
-                                                                           thresholds = thresholds, n_splits = n_splits, plot_result = True)
+best_threshold, results = selectThresholdByCV(clf = classifier, X = X_train, y = y_train, 
+                                              thresholds = thresholds, n_splits = n_splits, 
+                                              plot_result = True)
+best_threshold
+
 # %%
-print('Best threshold = %.3f' % (best_threshold))
-print('F1 score CV = %.3f' % (best_f1))
-print('Precision CV = %.3f' % (best_precision))
-print('Recall CV = %.3f' % (best_recall))
+classifier = LogisticRegression(solver = 'liblinear', random_state = 0)
+classifier.fit(X_train, y_train)
+
+y_test_score = classifier.predict_proba(X_test)[:, 1]
+y_pred = (y_test_score >= 0.111)
+print(classification_report(y_test, y_pred))
+print(f1_score(y_test, y_pred))
 
 # %%
 # Applying Grid Search to find the best model and the best parameters
@@ -68,7 +91,7 @@ classifier = LogisticRegression(solver = 'liblinear', random_state = 0)
 parameter = [{'penalty': ['l1'], 'C': np.arange(0.01, 1, 0.5)}, 
              {'penalty': ['l2'], 'C': np.arange(0.01, 1, 0.5)}]
 
-skf = StratifiedKFold(n_splits = 10, random_state = 0)
+skf = StratifiedKFold(n_splits = 5, random_state = 0)
 grid_search = GridSearchCV(estimator = classifier, 
                            param_grid = parameter,
                            scoring = 'average_precision',
