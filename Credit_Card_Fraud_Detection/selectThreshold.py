@@ -9,12 +9,11 @@ classification_report, confusion_matrix, precision_recall_curve, \
 average_precision_score, roc_curve, auc
 from sklearn.model_selection import KFold, StratifiedKFold
 
-def cross_val(clf, X, y, thresholds, n_splits = 5):    
+def cross_val(clf, X, y, thresholds, cv):    
     F1_array = []
     Precision_array = []    
     Recall_array = []
-    # kf = KFold(n_splits = n_splits, random_state = 0)
-    kf = StratifiedKFold(n_splits = n_splits, random_state = 0)
+    kf = cv
     i = 0
     for train_ind, val_ind in kf.split(X, y):        
         i = i + 1        
@@ -133,7 +132,7 @@ def outputThreshold(F1, Precision, Recall, Thresholds):
     plt.show()    
     return best, cv_results
 
-def selectThresholdByCV(clf, X, y, thresholds, n_splits = 5, plot_result = True): 
+def selectThresholdByCV(clf, X, y, thresholds, cv = StratifiedKFold(n_splits = 5), plot_result = True): 
     f1, precision, recall = cross_val(clf = clf, X = X, y = y, 
-                                      thresholds = thresholds, n_splits = n_splits)
+                                      thresholds = thresholds, cv = cv)
     return outputThreshold(F1 = f1, Precision = precision, Recall = recall, Thresholds = thresholds)
