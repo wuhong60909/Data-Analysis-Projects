@@ -110,12 +110,12 @@ get_predictions(y_true = y_test, y_pred = y_pred)
 # %% [markdown]
 # ## Plot scores, ROC, PRF, PR curves
 # %%
-from curves import curves
-a = curves(y_true = y_test, y_score = y_score)
-a.scores_plot()
-a.ROC_plot()
-a.PRF_plot()
-a.PR_plot()
+import curves as C
+C.plot_scores(y_true = y_test, y_score = y_score)
+fpr, tpr = C.plot_ROC(y_true = y_test, y_score = y_score)
+precision, recall, threshold, f1_scores = C.plot_precision_recall_vs_threshold(y_true = y_test, y_score = y_score)
+C.plot_precision_recall(y_true = y_test, y_score = y_score)
+
 
 # %%
 # Predicting the Test set
@@ -146,5 +146,8 @@ threshold = best_threshold['Threshold']
 y_score = classifier.predict_proba(X_test)[:, 1]
 y_pred = (y_score > threshold)
 get_predictions(y_true = y_test, y_pred = y_pred)
+
+# %%
+
 
 # %%
