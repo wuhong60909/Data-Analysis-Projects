@@ -71,7 +71,6 @@ def plot_feature_importance(model, predictors):
 # %%
 drop_list = ['Time', 'Amount']
 # drop_list = ['Time', 'Amount', 'V28', 'V27', 'V26', 'V25', 'V24', 'V23', 'V22', 'V20', 'V15', 'V13', 'V8']
-
 X = dataset_X.drop(drop_list, axis = 1)
 predictor_name = X.columns
 X = X.values
@@ -94,8 +93,6 @@ C.plot_scores(y_true = y_test, y_score = y_score)
 fpr_lr, tpr_lr, roc_auc_lr = C.plot_ROC(y_true = y_test, y_score = y_score)
 precision_lr, recall_lr, threshold_lr, f1_scores_lr = C.plot_precision_recall_vs_threshold(y_true = y_test, y_score = y_score)
 _, _, pr_auc_lr = C.plot_precision_recall(y_true = y_test, y_score = y_score)
-
-
 # %% [markdown]
 # ##  Extreme Gradient Boosting (XGB)
 # %%
@@ -104,17 +101,14 @@ xgb_clf.fit(X_train, y_train)
 y_score = xgb_clf.predict_proba(X_test)[:,1]
 y_pred = xgb_clf.predict(X_test)
 get_predictions(y_true = y_test, y_pred = y_pred)
-
 # %%
 # ## Plot scores, ROC, Precision, Recall, F1 curve, Precision-Recall curve
 C.plot_scores(y_true = y_test, y_score = y_score)
 fpr_xgb, tpr_xgb, roc_auc_xgb = C.plot_ROC(y_true = y_test, y_score = y_score)
 precision_xgb, recall_xgb, threshold_xgb, f1_scores_xgb = C.plot_precision_recall_vs_threshold(y_true = y_test, y_score = y_score)
 _, _, pr_auc_xgb = C.plot_precision_recall(y_true = y_test, y_score = y_score)
-
 # %%
 plot_feature_importance(model = xgb_clf, predictors = predictor_name)
-
 # %%
 # Ramdom forest Classifier
 rf_clf = RandomForestClassifier(n_estimators = 200, 
@@ -123,22 +117,18 @@ rf_clf = RandomForestClassifier(n_estimators = 200,
                                 min_samples_split = 2, 
                                 n_jobs = -1,
                                 random_state = 0)
-
 rf_clf.fit(X_train, y_train)
 y_score = rf_clf.predict_proba(X_test)[:,1]
 y_pred = rf_clf.predict(X_test)
 get_predictions(y_true = y_test, y_pred = y_pred)
-
 # %%
 # ## Plot scores, ROC, Precision, Recall, F1 curve, Precision-Recall curve
 C.plot_scores(y_true = y_test, y_score = y_score)
 fpr_rf, tpr_rf, roc_auc_rf = C.plot_ROC(y_true = y_test, y_score = y_score)
 precision_rf, recall_rf, threshold_rf, f1_scores_rf = C.plot_precision_recall_vs_threshold(y_true = y_test, y_score = y_score)
 _, _, pr_auc_rf = C.plot_precision_recall(y_true = y_test, y_score = y_score)
-
 # %%
 plot_feature_importance(model = rf_clf, predictors = predictor_name)
-
 # %% [markdown]
 # ## Voting Classifier
 # %%
@@ -153,23 +143,19 @@ rf_clf = RandomForestClassifier(n_estimators = 200,
 voting_clf = VotingClassifier (estimators = [('lr', lr_clf), ('xgb', xgb_clf), ('rf', rf_clf)], 
                                voting = 'soft', 
                                weights = [1, 1.33, 1])
-
 voting_clf.fit(X_train,y_train)
 y_score = voting_clf.predict_proba(X_test)[:,1]
 y_pred = voting_clf.predict(X_test)
 get_predictions(y_true = y_test, y_pred = y_pred)
-
 # %%
 # ## Plot scores, ROC, Precision, Recall, F1 curve, Precision-Recall curve
 C.plot_scores(y_true = y_test, y_score = y_score)
 fpr_voting, tpr_voting, roc_auc_voting = C.plot_ROC(y_true = y_test, y_score = y_score)
 precision_voting, recall_voting, threshold_voting, f1_scores_voting = C.plot_precision_recall_vs_threshold(y_true = y_test, y_score = y_score)
 _, _, pr_auc_voting = C.plot_precision_recall(y_true = y_test, y_score = y_score)
-
-
 # %%
 def roc_curve_for_all_models():
-    plt.figure(figsize = (16, 12))
+    plt.figure(figsize = (12, 8))
     plt.plot(fpr_lr, tpr_lr, label = 'LogisticRegression: AUC = {:.4f}'.format(roc_auc_lr), linewidth = 2)
     plt.plot(fpr_xgb, tpr_xgb, label = 'XGBoost: AUC = {:.4f}'.format(roc_auc_xgb), linewidth = 2)
     plt.plot(fpr_rf, tpr_rf, label = 'Random Forest: AUC = {:.4f}'.format(roc_auc_rf), linewidth = 2)
@@ -183,13 +169,11 @@ def roc_curve_for_all_models():
     plt.legend(loc = 'lower right')
     plt.savefig('roc.png')
     plt.show()
-
 # %%
 roc_curve_for_all_models()
-
 # %%
 def precision_recall_for_all_models () :
-    plt.figure(figsize = (16, 12))
+    plt.figure(figsize = (12, 8))
     f_scores = np.linspace(0.2, 0.8, num = 4)
     for f_score in f_scores:
         x = np.linspace(0.001, 1)
@@ -211,10 +195,7 @@ def precision_recall_for_all_models () :
     plt.show()
 
 # %%
-precision_recall_for_all_models() 
-
-
-
+precision_recall_for_all_models()
 
 # %% [markdown]
 # ## Select threshold by stratifiefKfold cross-validation
@@ -226,8 +207,7 @@ thresholds = np.array([0.01, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
 # classifier = xgb.XGBClassifier(n_jobs = -1, n_estimators = 200)
 classifier = VotingClassifier (estimators = [('lr', lr_clf), ('xgb', xgb_clf), ('rf', rf_clf)], 
                                voting = 'soft', 
-                               weights = [1, 2, 2])
-
+                               weights = [1, 1, 1])
 
 # %%
 best_threshold, results = selectThresholdByCV(clf = classifier, X = X_train, y = y_train, 
