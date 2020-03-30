@@ -6,7 +6,7 @@ from sklearn.metrics import precision_recall_curve, average_precision_score, roc
 def plot_scores(y_true, y_score):
     test_score = pd.DataFrame({'True_class': y_true, 
                                'score': y_score})
-    plt.figure(figsize = (12, 5))
+    plt.figure(figsize = (12, 8))
     plt.scatter(test_score.index[test_score['True_class'] == 0], 
                 test_score[test_score['True_class'] == 0]['score'], 
                 s = 5, label = '0')
@@ -26,9 +26,9 @@ def plot_ROC(y_true, y_score):
     fpr, tpr, _ = roc_curve(test_score.True_class, test_score.score)
     roc_auc = roc_auc_score(test_score.True_class, test_score.score)
     
-    plt.figure(figsize = (12, 5))
+    plt.figure(figsize = (12, 8))
     plt.plot(fpr, tpr, linewidth = 3, label = 'AUC = %0.3f' % (roc_auc))
-    plt.plot([0, 1], [0, 1], linewidth = 3)
+    plt.plot([0, 1], [0, 1], '--k', linewidth = 3)
     plt.xlim(left = -0.02, right = 1)
     plt.ylim(bottom = 0, top = 1.02)
     plt.xlabel('False Positive Rate (FPR)')
@@ -36,7 +36,7 @@ def plot_ROC(y_true, y_score):
     plt.title('Receiver operating characteristic curve (ROC)')
     plt.legend(loc = 'lower right')
     plt.show()
-    return fpr, tpr
+    return fpr, tpr, roc_auc
 
 def plot_precision_recall_vs_threshold(y_true, y_score):     
     test_score = pd.DataFrame({'True_class': y_true, 
@@ -45,7 +45,7 @@ def plot_precision_recall_vs_threshold(y_true, y_score):
     precision, recall, threshold = precision_recall_curve(test_score.True_class, test_score.score)
     f1_scores = 2 * precision * recall / (precision + recall)
 
-    plt.figure(figsize = (12, 5))
+    plt.figure(figsize = (12, 8))
     plt.plot(threshold, precision[1: ], label = "Precision", linewidth = 3)
     plt.plot(threshold, recall[1: ], label = "Recall", linewidth = 3)
     plt.plot(threshold, f1_scores[1: ], label = "F1 score", linewidth = 3, color = 'green')
@@ -64,7 +64,7 @@ def plot_precision_recall(y_true, y_score):
     precision, recall, _ = precision_recall_curve(test_score.True_class, test_score.score)
     average_precision = average_precision_score(test_score.True_class, test_score.score)
         
-    plt.figure(figsize = (12, 5))
+    plt.figure(figsize = (12, 8))
     f_scores = np.linspace(0.2, 0.8, num = 7)
     for f_score in f_scores:
         x = np.linspace(0.001, 1)
@@ -81,3 +81,4 @@ def plot_precision_recall(y_true, y_score):
     plt.title('Precision - Recall curve')
     plt.legend(loc = 'upper right')
     plt.show()
+    return precision, recall, average_precision
