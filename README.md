@@ -1,2 +1,2 @@
 # Data-Analysis-Projects
-Some data analysis related cases and notes.
+這裡主要是放置一些個人資料分析的實作案例與筆記，方便日後面對各種分析問題可以作為參考，未來會不定期更新及整理。
