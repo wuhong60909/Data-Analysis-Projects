@@ -14,8 +14,8 @@ Reference: <https://www.kaggle.com/mlg-ulb/creditcardfraud>
 2. 特徵選取 (Feature Selection)
 3. 評估分類表現準則
 4. 分類演算法
-5. 超參數優化
-6. 評估分類演算法表現準則
+5. 模型優化
+6. 比較分類演算法表現準則
 7. 分類門檻值
 
 ## 1. EDA
@@ -51,15 +51,15 @@ from lightgbm import LGBMClassifier
 from catboost import CatBoostClassifier
 ```
 
-## 5. 超參數優化
+## 5. 模型優化
 
-在訓練模型之前，會需要先給定模型一些參數值後再做計算。希望能調整這些超參數來使分類的正確率最大化。採用 GridsearchCV 或是 RandomizedsearchCV 尋找超參數來優化模型。因為資料是極度不平衡資料，使用 StratifiedKFold 分層抽樣確保抽樣時各個類別下資料樣本數維持固定比例。
+在訓練模型之前，會需要先給定模型一些參數值後再做計算。希望能調整這些**超參數**(**hyperparameters**) 來提升模型準度，可採用 GridsearchCV 或是 RandomizedsearchCV 尋找超參數來優化模型。因為資料是極度不平衡資料，使用 StratifiedKFold 分層抽樣確保抽樣時各個類別下資料樣本數維持固定比例。
 
 ```python
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, StratifiedKFold
 ```
 
-## 6. 評估分類演算法表現準則
+## 6. 比較分類演算法表現準則
 
 使用 ROC curve? Precision-Recall curve?
 
