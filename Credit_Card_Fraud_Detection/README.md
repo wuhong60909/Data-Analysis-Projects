@@ -12,7 +12,7 @@ Reference: <https://www.kaggle.com/mlg-ulb/creditcardfraud>
 
 1. Exploratory Data Analysis (EDA)
 2. 特徵選取 (Feature Selection)
-3. 評估分類表現準則
+3. 定義模型表現
 4. 分類演算法
 5. 模型優化
 6. 比較分類演算法表現準則
@@ -30,7 +30,24 @@ Reference: <https://www.kaggle.com/mlg-ulb/creditcardfraud>
 from scipy.stats import ttest_ind, ks_2samp
 ```
 
-## 3. 評估分類表現準則
+## 3. 定義模型表現
+
+- Confusion matrix (混淆矩陣):
+  - True Positive (TP): 預測結果為 **陽** 性，實際上是 **陽** 性。
+  - True Negative (TN): 預測結果為 **陰** 性，實際上是 **陰** 性。
+  - False Positive (FP): 預測結果為 **陽** 性，實際上是 **陰** 性 (偽陽性)。
+  - False Negative (FN): 預測結果為 **陰** 性，實際上是 **陽** 性 (偽陰性)。
+
+- Metrics:
+  - Accuracy (準確率): ( TP + TN ) / ( TP + TN + FP + FN )
+  - Precision (精確率): TP / ( TP + FP )
+  - Recall/TPR (召回率/真陽性率): TP / ( TP + FN )
+  - FPR (偽陽性率): FP / ( TN + FP )
+  - F1 score: 2 x ( Precision x Recall ) / ( Precision + Recall )
+
+- Roc Curve: 在不同的門檻值下得到不同的真陽性率 (TPR，即 Recall) 與偽陽性率 (FPR) 所繪製的曲線，x-軸為 FPR， y-軸為 TPR。
+
+- Precision-Recall Curve: 在不同的門檻值下得到不同的 Precision、Recall 所繪製的曲線，x-軸為 Recall， y-軸為 Precision。
 
 ```python
 from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
