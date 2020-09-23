@@ -121,3 +121,9 @@ Precision-Recall curve
 ## 7. 分類門檻值
 
 資料餵入模型得到的輸出值為機率值，分類門檻的預設值為 0.5，輸出值 <= 0.5 分為第 0 類，反之輸出值 > 0.5 則分為第 1 類，藉由調整預設值提升分類準度。
+
+## 8. 各模型分類結果比較(LightGBM, XGBoost, CatBoost, VotingClassifier)
+
+![image3](https://github.com/wuhong60909/Data-Analysis-Projects/blob/master/Credit_Card_Fraud_Detection/Figure/Precision_Recall%20curves.png?raw=true "Precision-Recall curves")
+
+![image4](https://github.com/wuhong60909/Data-Analysis-Projects/blob/master/Credit_Card_Fraud_Detection/Figure/F1_scores.PNG?raw=true "F1_scores")
